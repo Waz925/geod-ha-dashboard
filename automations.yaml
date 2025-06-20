@@ -1,0 +1,21 @@
+- alias: "Capture GEOD Balance Daily"
+  trigger:
+    - platform: time
+      at: "00:05:00"
+  action:
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.geod_previous_balance
+      data:
+        value: "{{ states('sensor.geod_token_balance') | float }}"
+
+- alias: "Snapshot GEOD Received Today"
+  trigger:
+    - platform: time
+      at: "23:55:00"
+  action:
+    - service: input_number.set_value
+      target:
+        entity_id: input_number.geod_tokens_received_today_snapshot
+      data:
+        value: "{{ states('sensor.geod_tokens_received_today') | float }}"
