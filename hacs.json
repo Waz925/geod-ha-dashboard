@@ -1,8 +1,0 @@
-{
-  "name": "GEOD Dashboard",
-  "content_in_root": false,
-  "render_readme": true,
-  "description": "Home Assistant dashboard to track GEOD token rewards",
-  "domain": "geod_dashboard",
-  "category": "dashboard"
-}
