@@ -1,0 +1,42 @@
+title: GEOD Dashboard
+views:
+  - title: GEOD Overview
+    path: geod
+    icon: mdi:currency-usd
+    cards:
+      - type: gauge
+        entity: sensor.geod_token_balance
+        name: Total GEOD Balance
+        min: 0
+        max: 1000
+        unit: GEOD
+
+      - type: entity
+        entity: sensor.geod_tokens_received_today
+        name: GEOD Received Today
+        icon: mdi:gift
+
+      - type: entity
+        entity: sensor.geod_next_update
+        name: Next Expected Update
+
+      - type: button
+        name: Refresh GEOD Balance
+        icon: mdi:refresh
+        tap_action:
+          action: call-service
+          service: script.refresh_geod_balance
+
+      - type: history-graph
+        title: GEOD Balance (48h)
+        entities:
+          - sensor.geod_token_balance
+        hours_to_show: 48
+        refresh_interval: 300
+
+      - type: history-graph
+        title: GEOD Rewards (7 Days)
+        entities:
+          - sensor.geod_daily_rewards_history
+        hours_to_show: 168
+        refresh_interval: 300
