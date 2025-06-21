@@ -1,8 +1,12 @@
-refresh_geod_balance:
-  alias: "Refresh GEOD Token Balance"
+refresh_geod_usd_price:
+  alias: Refresh GEOD USD Price
   sequence:
     - service: homeassistant.update_entity
       target:
-        entity_id:
-          - sensor.geod_token_balance
-          - sensor.geod_price
+        entity_id: sensor.geod_usd_price
+refresh_geod_balance:
+  alias: Refresh GEOD Token Balance
+  sequence:
+    - service: homeassistant.update_entity
+      target:
+        entity_id: sensor.geod_token_balance
