@@ -1,4 +1,3 @@
-# Home Assistant example config
 default_config:
 
 input_number:
