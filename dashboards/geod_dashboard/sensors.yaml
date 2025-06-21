@@ -1,17 +1,27 @@
 - platform: rest
   name: "GEOD Token Balance"
-  resource: https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=0xAC0F66379A6d7801D7726d5a943356A172549Adb&address=!secret geod_wallet_address&tag=latest&apikey=!secret polygonscan_api_key
+  resource: !secret geod_token_balance_url
   value_template: >
     {{ (value_json.result | int) / 1e18 | round(2) }}
   unit_of_measurement: "GEOD"
-  scan_interval: 21600
+  scan_interval: 21600  # 6 hours
 
 - platform: rest
-  name: "GEOD Price"
-  resource: https://whitebit.com/api/v4/public/ticker?market=GEOD_USDT
-  value_template: "{{ value_json.last }}"
+  name: "GEOD USD Price"
+  resource: https://api.coinpaprika.com/v1/tickers/geod-geodnet-token
+  value_template: "{{ value_json.quotes.USD.price | float }}"
   unit_of_measurement: "USD"
   scan_interval: 3600
+  timeout: 30
+  
+- platform: template
+  sensors:
+    geod_wallet_usd_value:
+      friendly_name: "GEOD Wallet USD Value"
+      unit_of_measurement: "USD"
+      value_template: >
+        {{ (states('sensor.geod_token_balance') | float) 
+           * (states('sensor.geod_usd_price') | float) | round(2) }}
 
 - platform: template
   sensors:
@@ -21,20 +31,13 @@
         {% set last = as_timestamp(states.sensor.geod_token_balance.last_updated) %}
         {{ (last + 21600) | timestamp_local }}
 
+- platform: template
+  sensors:
     geod_tokens_received_today:
       friendly_name: "GEOD Received Today"
       value_template: >
-        {{ (states('sensor.geod_token_balance') | float - states('input_number.geod_previous_balance') | float) | round(2) }}
+        {{ (states('sensor.geod_token_balance') | float) - (states('input_number.geod_tokens_received_today_snapshot') | float) }}
       unit_of_measurement: "GEOD"
-
-    geod_balance_usd:
-      friendly_name: "GEOD Balance (USD)"
-      value_template: >
-        {% set balance = states('sensor.geod_token_balance') | float %}
-        {% set price = states('sensor.geod_price') | float %}
-        {{ (balance * price) | round(2) }}
-      unit_of_measurement: "USD"
-      icon_template: mdi:currency-usd
 
 - platform: statistics
   name: "GEOD Daily Rewards History"
