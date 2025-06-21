@@ -1,12 +1,1 @@
 default_config:
-
-input_number:
-  geod_previous_balance:
-    name: Previous GEOD Balance
-    min: 0
-    max: 100000
-    step: 0.01
-
-script: !include scripts.yaml
-automation: !include automations.yaml
-sensor: !include sensors.yaml
