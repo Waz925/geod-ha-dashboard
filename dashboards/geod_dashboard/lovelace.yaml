@@ -17,11 +17,16 @@ views:
         icon: mdi:gift
 
       - type: entity
+        entity: sensor.geod_balance_usd
+        name: GEOD Balance in USD
+        icon: mdi:currency-usd
+
+      - type: entity
         entity: sensor.geod_next_update
         name: Next Expected Update
 
       - type: button
-        name: Refresh GEOD Balance
+        name: Refresh GEOD + Price Now
         icon: mdi:refresh
         tap_action:
           action: call-service

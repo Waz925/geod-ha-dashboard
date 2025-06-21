@@ -6,6 +6,13 @@
   unit_of_measurement: "GEOD"
   scan_interval: 21600
 
+- platform: rest
+  name: "GEOD Price"
+  resource: https://whitebit.com/api/v4/public/ticker?market=GEOD_USDT
+  value_template: "{{ value_json.last }}"
+  unit_of_measurement: "USD"
+  scan_interval: 3600
+
 - platform: template
   sensors:
     geod_next_update:
@@ -19,6 +26,15 @@
       value_template: >
         {{ (states('sensor.geod_token_balance') | float - states('input_number.geod_previous_balance') | float) | round(2) }}
       unit_of_measurement: "GEOD"
+
+    geod_balance_usd:
+      friendly_name: "GEOD Balance (USD)"
+      value_template: >
+        {% set balance = states('sensor.geod_token_balance') | float %}
+        {% set price = states('sensor.geod_price') | float %}
+        {{ (balance * price) | round(2) }}
+      unit_of_measurement: "USD"
+      icon_template: mdi:currency-usd
 
 - platform: statistics
   name: "GEOD Daily Rewards History"
